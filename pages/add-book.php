@@ -253,6 +253,13 @@
                     $stmt->bindParam(':code',$codes);
                     $stmt->bindParam(':datecreated',$datecreated);
                     $stmt->execute();
+					//logs
+					$act = "Book a Customer";
+					$date = date('Y-m-d h:i:s a');
+					$stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+					$stmt->bindParam(':datetime',$date);
+					$stmt->bindParam(':user',$_SESSION['sess_id']);
+					$stmt->bindParam(':activity',$act);
                     $now = time();
                     $your_date = strtotime($date_event);
                     $datediff = $your_date-$now;

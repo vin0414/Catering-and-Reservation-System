@@ -358,6 +358,21 @@ try
                 <?php
             }
             break;
+        case "logs":
+            $stmt = $dbh->prepare("Select a.*,b.Fullname from tblactivities a LEFT JOIN tblaccount b ON b.userID=a.userID GROUP BY a.activityID ORDER BY activityID DESC");
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+            foreach($data as $row)
+            {
+                ?>
+                    <tr>
+                        <td><?php echo $row['DateTime'] ?></td>
+                        <td><?php echo $row['Fullname'] ?></td>
+                        <td><?php echo $row['Activities'] ?></td>
+                    </tr>
+                <?php
+            }
+            break;
         default:
             break;
     }

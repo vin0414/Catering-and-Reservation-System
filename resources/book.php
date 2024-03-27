@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("dbconfig.php");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -150,6 +151,14 @@ try
             $stmt->bindParam(':time',$time);
             $stmt->bindParam(':code',$code);
             $stmt->execute();
+            //logs
+            $act = "Rescheduled reservation code : ".$code;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
+            $stmt->execute();
             echo "success";
             break;
         case "rebook":
@@ -206,6 +215,14 @@ try
             $stmt->bindParam(':time',$time);
             $stmt->bindParam(':code',$code);
             $stmt->execute();
+            //logs
+            $act = "Rebooked reservation code : ".$code;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
+            $stmt->execute();
             echo "success";
             break;
         case "reject":
@@ -213,12 +230,28 @@ try
             $stmt = $dbh->prepare("delete from tblreservation WHERE Code=:code");
             $stmt->bindParam(':code',$val);
             $stmt->execute();
+            //logs
+            $act = "Rejected reservation code : ".$val;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
+            $stmt->execute();
             echo "success";
             break;
         case "complete":
             $val = $_POST['value'];
             $stmt = $dbh->prepare("update tblreservation SET Status=2 WHERE Code=:code");
             $stmt->bindParam(':code',$val);
+            $stmt->execute();
+            //logs
+            $act = "Tag as Done reservation code : ".$val;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
             $stmt->execute();
             echo "success";
             break;
@@ -247,6 +280,14 @@ try
                 $stmt->bindParam(':code',$val);
                 $stmt->execute();
             }
+            //logs
+            $act = "Accepted payment from reservation code : ".$val;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
+            $stmt->execute();
             echo "success";
             break;
         case "accept":
@@ -258,6 +299,14 @@ try
             $date = date('Y-m-d');
             $stmt = $dbh->prepare("update tblreservation SET Status=1 WHERE Code=:code");
             $stmt->bindParam(':code',$val);
+            $stmt->execute();
+            //logs
+            $act = "Accepted the reservation of code : ".$val;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
             $stmt->execute();
             if($typeOfPayment=="Down Payment")
             {
@@ -378,6 +427,14 @@ try
             $val = $_POST['value'];
             $stmt = $dbh->prepare("update tblreservation SET Status=3 WHERE Code=:code");
             $stmt->bindParam(':code',$val);
+            $stmt->execute();
+            //logs
+            $act = "Cancelled the reservation of code : ".$val;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
             $stmt->execute();
             //send email
             $stmt = $dbh->prepare("Select * from tblreservation WHERE Code=:code");

@@ -26,6 +26,14 @@
                 $_SESSION['sess_id'] = $row['userID'];
                 $_SESSION['sess_role']="Super-user";
                 $_SESSION["loggedin"] = true;
+				//save
+				$act = "Logged In";
+				$date = date('Y-m-d h:i:s a');
+				$stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+				$stmt->bindParam(':datetime',$date);
+				$stmt->bindParam(':user',$row['userID']);
+				$stmt->bindParam(':activity',$act);
+				$stmt->execute();
                 header("location:pages/dashboard.php");
             }
             else

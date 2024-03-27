@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("dbconfig.php");
 try
 {
@@ -17,6 +18,14 @@ try
                 $stmt->bindParam(':rate',$amount);
                 $stmt->bindParam(':id',$id);
                 $stmt->execute();
+                //logs
+                $act = "Update new rate";
+                $act_date = date('Y-m-d h:i:s a');
+                $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+                $stmt->bindParam(':datetime',$act_date);
+                $stmt->bindParam(':user',$_SESSION['sess_id']);
+                $stmt->bindParam(':activity',$act);
+                $stmt->execute();
                 echo "success";
             }
             break;
@@ -34,6 +43,14 @@ try
                 $stmt->bindParam(':rate',$amount);
                 $stmt->bindParam(':stat',$stat);
                 $stmt->bindParam(':id',$id);
+                $stmt->execute();
+                //logs
+                $act = "Update rentals";
+                $act_date = date('Y-m-d h:i:s a');
+                $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+                $stmt->bindParam(':datetime',$act_date);
+                $stmt->bindParam(':user',$_SESSION['sess_id']);
+                $stmt->bindParam(':activity',$act);
                 $stmt->execute();
                 echo "success";
             }
@@ -56,6 +73,14 @@ try
                 $stmt->bindParam(':name',$file_name);
                 $stmt->bindParam(':file',$file);
                 $stmt->execute();
+                //logs
+                $act = "Uploaded gallery image";
+                $act_date = date('Y-m-d h:i:s a');
+                $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+                $stmt->bindParam(':datetime',$act_date);
+                $stmt->bindParam(':user',$_SESSION['sess_id']);
+                $stmt->bindParam(':activity',$act);
+                $stmt->execute();
                 echo "success";
             }
             break;
@@ -63,6 +88,14 @@ try
             $val = $_POST['value'];
             $stmt = $dbh->prepare("Delete from tblgallery WHERE galleryID=:id");
             $stmt->bindParam(':id',$val);
+            $stmt->execute();
+            //logs
+            $act = "Remove selected image";
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
             $stmt->execute();
             echo "success";
             break;
@@ -74,7 +107,7 @@ try
             {
                 $ImgURL = "../resources/gallery/".$row['File'];
                 ?>
-                <div class="col-4">
+                <div class="col-4 form-group">
                     <div class="card-box pd-10">
                         <img src="<?php echo $ImgURL ?>" class="img-fluid"/>
                         <p><?php echo $row['Filename'] ?></p>
@@ -98,6 +131,14 @@ try
                 $stmt->bindParam(':name',$desc);
                 $stmt->bindParam(':rate',$rate);
                 $stmt->bindParam(':stat',$stat);
+                $stmt->execute();
+                //logs
+                $act = "Added new rental";
+                $act_date = date('Y-m-d h:i:s a');
+                $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+                $stmt->bindParam(':datetime',$act_date);
+                $stmt->bindParam(':user',$_SESSION['sess_id']);
+                $stmt->bindParam(':activity',$act);
                 $stmt->execute();
                 echo "success";
             }
@@ -124,6 +165,14 @@ try
                     $stmt = $dbh->prepare('insert into tblprovince(Province)values(:name)');
                     $stmt->bindParam(':name',$name);
                     $stmt->execute();
+                    //logs
+                    $act = "Added new province";
+                    $act_date = date('Y-m-d h:i:s a');
+                    $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+                    $stmt->bindParam(':datetime',$act_date);
+                    $stmt->bindParam(':user',$_SESSION['sess_id']);
+                    $stmt->bindParam(':activity',$act);
+                    $stmt->execute();
                     echo "success";
                 }
             }
@@ -142,6 +191,14 @@ try
                 $stmt->bindParam(':name',$name);
                 $stmt->bindParam(':city',$city);
                 $stmt->bindParam(':rate',$rate);
+                $stmt->execute();
+                //logs
+                $act = "Added new city";
+                $act_date = date('Y-m-d h:i:s a');
+                $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+                $stmt->bindParam(':datetime',$act_date);
+                $stmt->bindParam(':user',$_SESSION['sess_id']);
+                $stmt->bindParam(':activity',$act);
                 $stmt->execute();
                 echo "success";
             }

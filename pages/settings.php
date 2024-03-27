@@ -438,7 +438,7 @@
 						<div class="tab-pane fade show active" id="home5" role="tabpanel">
 							<br/>
 							<div class="tableFixHead table-responsive" style="height:500px;overflow-y:auto;">
-								<table class="table nowrap" id="table">
+								<table class="table table-bordered nowrap" id="table">
 									<thead>
 										<th>Date & Time</th>
 										<th>Fullname</th>
@@ -449,6 +449,25 @@
 							</div>
 						</div>
 						<div class="tab-pane fade" id="profile5" role="tabpanel">
+							<br/>
+							<div class="row g-3">
+								<div class="col-12 form-group">
+									<div class="card-box">
+										<div class="card-body">
+											<form method="POST" class="row g-3" enctype="multipart/form-data">
+												<div class="col-12 form-group">
+													<label>File</label>
+													<input type="file" class="form-control" name="file" required/>
+												</div>
+												<div class="col-12 form-group">
+													<button type="submit" class="btn btn-primary" id="btnUpload"><span class="fa fa-upload"></span>&nbsp;Restore</button>
+													<a href="" class="btn btn-primary"><span class="fa fa-download"></span>&nbsp;Back-Up</a>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -464,5 +483,31 @@
 		<script src="src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
 		<script src="src/plugins/datatables/js/dataTables.responsive.min.js"></script>
 		<script src="src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+		<script>
+			$(document).ready(function()
+			{
+				load();
+			});
+			function load()
+			{
+				$('#tblactivities').html("<tr><td colspan='3'><center>Loading...</center></td></tr>");
+				var action = "logs";
+				$.ajax({
+    		          url:"../resources/fetch.php",method:"GET",
+    		          data:{action:action},
+    		          success:function(data)
+    		          {
+    		              if(data==="")
+						  {
+							$('#tblactivities').html("<tr><td colspan='3'><center>No Record(s)</center></td></tr>");
+						  }
+						  else
+						  {
+							$('#tblactivities').html(data);
+						  }
+    		          }
+    		      });
+			}
+		</script>
 	</body>
 </html>

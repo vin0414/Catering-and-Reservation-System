@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("dbconfig.php");
 $action = $_POST['action'];
 switch($action)
@@ -23,6 +24,14 @@ switch($action)
         $stmt->bindParam(':stat',$stat);
         $stmt->bindParam(':id',$val);
         $stmt->execute();
+        //logs
+        $act = "Deactivated selected menu";
+        $act_date = date('Y-m-d h:i:s a');
+        $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+        $stmt->bindParam(':datetime',$act_date);
+        $stmt->bindParam(':user',$_SESSION['sess_id']);
+        $stmt->bindParam(':activity',$act);
+        $stmt->execute();
         echo "success";
         break;
     case "activate":
@@ -32,6 +41,14 @@ switch($action)
         $stmt->bindParam(':stat',$stat);
         $stmt->bindParam(':id',$val);
         $stmt->execute();
+        //logs
+        $act = "Activated selected menu";
+        $act_date = date('Y-m-d h:i:s a');
+        $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+        $stmt->bindParam(':datetime',$act_date);
+        $stmt->bindParam(':user',$_SESSION['sess_id']);
+        $stmt->bindParam(':activity',$act);
+        $stmt->execute();
         echo "success";
         break;
     case "remove-category":
@@ -39,12 +56,28 @@ switch($action)
         $stmt = $dbh->prepare("delete from tblcategory WHERE catID=:id");
         $stmt->bindParam(':id',$val);
         $stmt->execute();
+        //logs
+        $act = "Deleted selected Category";
+        $act_date = date('Y-m-d h:i:s a');
+        $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+        $stmt->bindParam(':datetime',$act_date);
+        $stmt->bindParam(':user',$_SESSION['sess_id']);
+        $stmt->bindParam(':activity',$act);
+        $stmt->execute();
         echo "success";
         break;
     case "remove-menu":
         $val = $_POST['value'];
         $stmt = $dbh->prepare("delete from tblmenu WHERE menuID=:id");
         $stmt->bindParam(':id',$val);
+        $stmt->execute();
+        //logs
+        $act = "Deleted selected menu";
+        $act_date = date('Y-m-d h:i:s a');
+        $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+        $stmt->bindParam(':datetime',$act_date);
+        $stmt->bindParam(':user',$_SESSION['sess_id']);
+        $stmt->bindParam(':activity',$act);
         $stmt->execute();
         echo "success";
         break;
@@ -81,6 +114,14 @@ switch($action)
             $stmt->bindParam(':details',$details);
             $stmt->bindParam(':id',$id);
             $stmt->execute();
+            //logs
+            $act = "Updated the menu : ".$menu;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
+            $stmt->execute();
             echo "success";
         }
         break;
@@ -108,6 +149,14 @@ switch($action)
             $stmt->bindParam(':desc',$desc);
             $stmt->bindParam(':stat',$stat);
             $stmt->bindParam(':file',$file);
+            $stmt->execute();
+            //logs
+            $act = "Added new menu : ".$food;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
             $stmt->execute();
             echo "success";
         }
@@ -225,6 +274,15 @@ switch($action)
             $stmt = $dbh->prepare("insert into tblcategory(Category_Name)values(:cat)");
             $stmt->bindParam(':cat',$cat);
             $stmt->execute();
+
+            //logs
+            $act = "Added ".$cat." as new category";
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
+            $stmt->execute();
             echo "success";
         }
         break;
@@ -291,6 +349,14 @@ switch($action)
             $stmt->bindParam(':details',$details);
             $stmt->bindParam(':file',$file);
             $stmt->execute();
+            //logs
+            $act = "Added new event : ".$event;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
+            $stmt->execute();
             echo "success";
         }
         break;
@@ -298,6 +364,14 @@ switch($action)
         $val = $_POST['value'];
         $stmt = $dbh->prepare("delete from tblevent WHERE eventID=:id");
         $stmt->bindParam(':id',$val);
+        $stmt->execute();
+        //logs
+        $act = "Remove Event";
+        $act_date = date('Y-m-d h:i:s a');
+        $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+        $stmt->bindParam(':datetime',$act_date);
+        $stmt->bindParam(':user',$_SESSION['sess_id']);
+        $stmt->bindParam(':activity',$act);
         $stmt->execute();
         echo "Successfully removed";
         break;
@@ -317,6 +391,14 @@ switch($action)
             $stmt->bindParam(':package',$type);
             $stmt->bindParam(':rate',$rate);
             $stmt->bindParam(':stat',$status);
+            $stmt->execute();
+            //logs
+            $act = "Added new package : ".$type;
+            $act_date = date('Y-m-d h:i:s a');
+            $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+            $stmt->bindParam(':datetime',$act_date);
+            $stmt->bindParam(':user',$_SESSION['sess_id']);
+            $stmt->bindParam(':activity',$act);
             $stmt->execute();
             echo "success";
         }
@@ -451,6 +533,14 @@ switch($action)
         $stmt->bindParam(':rate',$rate);
         $stmt->bindParam(':stat',$stat);
         $stmt->bindParam(':id',$val);
+        $stmt->execute();
+        //logs
+        $act = "Updated details";
+        $act_date = date('Y-m-d h:i:s a');
+        $stmt = $dbh->prepare("insert into tblactivities(DateTime,userID,Activities)values(:datetime,:user,:activity)");
+        $stmt->bindParam(':datetime',$act_date);
+        $stmt->bindParam(':user',$_SESSION['sess_id']);
+        $stmt->bindParam(':activity',$act);
         $stmt->execute();
         echo "success";
         break;
