@@ -1,29 +1,35 @@
 <?php
     session_start();
     require_once("../resources/dbconfig.php");
+	require_once("../resources/restore.php");
     if(empty($_SESSION['sess_fullname']) || $_SESSION['sess_fullname'] == ''|| $_SESSION['sess_role']!="Super-user"){
     header("Location: https://zephaniah-catering.com/");
     die();
     }
-    $successmsg = "";$errormsg="";
-    if(isset($_POST['btnSave']))
-    {
-        $new = $_POST['new'];
-        $retype = $_POST['retype'];
-        $user = $_POST['user'];
-        if($new!=$retype)
-        {
-            $errormsg = "Invalid! Password mismatched";
-        }
-        else
-        {
-            $stmt = $dbh->prepare("update tblaccount SET Password=SHA1(:pass) WHERE userID=:user");
-            $stmt->bindParam(':pass',$new);
-            $stmt->bindParam(':user',$user);
-            $stmt->execute();
-            $successmsg = "Successfully password changed";
-        }
-    }
+	if(isset($_POST['restore'])){
+ 
+		//get post data
+		$server = $_POST['server'];
+		$username = $_POST['username'];
+		$password = $_POST['password'];
+		$dbname = $_POST['database'];
+ 
+		//moving the uploaded sql file
+		$filename = $_FILES['file']['name'];
+		move_uploaded_file($_FILES['file']['tmp_name'],'../resources/upload/' . $filename);
+		$file_location = '../resources/upload/' . $filename;
+ 
+		//restore database using our function
+		$restore = restore($server, $username, $password, $dbname, $file_location);
+ 
+		if($restore['error']){
+			$_SESSION['error'] = $restore['message'];
+		}
+		else{
+			$_SESSION['success'] = $restore['message'];
+		}
+ 
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -453,15 +459,57 @@
 							<div class="row g-3">
 								<div class="col-12 form-group">
 									<div class="card-box">
+										<div class="card-header">Database and Credentials</div>
 										<div class="card-body">
+											<?php
+												if(isset($_SESSION['error'])){
+													?>
+													<div class="alert alert-danger text-center">
+														<?php echo $_SESSION['error']; ?>
+													</div>
+													<?php
+								
+													unset($_SESSION['error']);
+												}
+								
+												if(isset($_SESSION['success'])){
+													?>
+													<div class="alert alert-success text-center">
+														<?php echo $_SESSION['success']; ?>
+													</div>
+													<?php
+								
+													unset($_SESSION['success']);
+												}
+											?>
 											<form method="POST" class="row g-3" enctype="multipart/form-data">
+												<div class="col-12 form-group">
+													<div class="row g-3">
+														<div class="col-lg-4">
+															<label>Server</label>
+															<input type="text" class="form-control" name="server" value="localhost" required/>
+														</div>
+														<div class="col-lg-4">
+															<label>Username</label>
+															<input type="text" class="form-control" name="username" value="root" required/>
+														</div>
+														<div class="col-lg-4">
+															<label>Password</label>
+															<input type="password" class="form-control" name="password" value="Fastcat_01" required/>
+														</div>
+													</div>
+												</div>
+												<div class="col-12 form-group">
+													<label>Database Name</label>
+													<input type="text" class="form-control" name="database" value="reservation" required/>
+												</div>
 												<div class="col-12 form-group">
 													<label>File</label>
 													<input type="file" class="form-control" name="file" required/>
 												</div>
 												<div class="col-12 form-group">
-													<button type="submit" class="btn btn-primary" id="btnUpload"><span class="fa fa-upload"></span>&nbsp;Restore</button>
-													<a href="" class="btn btn-primary"><span class="fa fa-download"></span>&nbsp;Back-Up</a>
+													<button type="submit" class="btn btn-primary" id="btnUpload" name="restore"><span class="fa fa-upload"></span>&nbsp;Restore</button>
+													<a href="../resources/download.php" class="btn btn-primary"><span class="fa fa-download"></span>&nbsp;Back-Up</a>
 												</div>
 											</form>
 										</div>
