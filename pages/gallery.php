@@ -398,6 +398,13 @@
 					            </div> 
 					        </form>
 					    </div>
+						<br/>
+						<select class="form-control" id="sort">
+							<option value="">Sort By</option>
+							<option>Birthday</option>
+							<option>Wedding</option>
+							<option>Corporate</option>
+						</select>
 					</div>
 					<div class="col-lg-8 form-group">
 					    <div class="row" id="result" style="height:650px;overflow-y:auto;">
@@ -446,6 +453,29 @@
 		          }
 		       });
 		    });
+
+			$('#sort').change(function()
+			{
+				var val = $(this).val();
+				var action = "sort";
+				$('#result').html("<div class='col-12'><center>Loading....</center></div>");
+		        $.ajax({
+		            url:"../resources/upload.php",method:"POST",
+		            data:{action:action,value:val},
+		            success:function(data)
+		            {
+		                if(data==="")
+		                {
+		                    $('#result').html("<div class='col-12'><center>No Data</center></div>");
+		                }
+		                else
+		                {
+		                    $('#result').html(data);
+		                }
+		            }
+		        });
+			});
+
 		    function load()
 		    {
 		        var action = "gallery";

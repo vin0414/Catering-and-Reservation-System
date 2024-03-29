@@ -117,6 +117,48 @@ try
                 <?php
             }
             break;
+        case "sort":
+            $val = $_POST['value'];
+            if(empty($val))
+            {
+                $stmt = $dbh->prepare('Select * from tblgallery');
+                $stmt->execute();
+                $data = $stmt->fetchAll();
+                foreach($data as $row)
+                {
+                    $ImgURL = "../resources/gallery/".$row['File'];
+                    ?>
+                    <div class="col-4 form-group">
+                        <div class="card-box pd-10">
+                            <img src="<?php echo $ImgURL ?>" class="img-fluid"/>
+                            <p><?php echo $row['Filename'] ?></p>
+                            <button class="btn btn-outline-danger btn-sm remove" value="<?php echo $row['galleryID'] ?>"><span class="bi bi-trash"></span> Remove</button>
+                        </div>
+                    </div>
+                    <?php
+                }
+            }
+            else
+            {
+                $stmt = $dbh->prepare('Select * from tblgallery WHERE Filename=:val');
+                $stmt->bindParam(':val',$val);
+                $stmt->execute();
+                $data = $stmt->fetchAll();
+                foreach($data as $row)
+                {
+                    $ImgURL = "../resources/gallery/".$row['File'];
+                    ?>
+                    <div class="col-4 form-group">
+                        <div class="card-box pd-10">
+                            <img src="<?php echo $ImgURL ?>" class="img-fluid"/>
+                            <p><?php echo $row['Filename'] ?></p>
+                            <button class="btn btn-outline-danger btn-sm remove" value="<?php echo $row['galleryID'] ?>"><span class="bi bi-trash"></span> Remove</button>
+                        </div>
+                    </div>
+                    <?php
+                }
+            }
+            break;
         case "rent":
             $desc = $_POST['desc'];
             $rate = str_replace(',', '', $_POST['rate']);
