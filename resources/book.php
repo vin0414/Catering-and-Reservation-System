@@ -292,10 +292,10 @@ try
             break;
         case "accept":
             $val = $_POST['code'];
-            $paymentMethod = $_POST['payment'];
+            $paymentMethod = $_POST['payment_method'];
             $reference = $_POST['reference'];
-            $typeOfPayment = $_POST['payment'];
             $downpayment = $_POST['amount'];
+            $remarks = $_POST['payment'];
             $date = date('Y-m-d');
             $stmt = $dbh->prepare("update tblreservation SET Status=1 WHERE Code=:code");
             $stmt->bindParam(':code',$val);
@@ -308,7 +308,7 @@ try
             $stmt->bindParam(':user',$_SESSION['sess_id']);
             $stmt->bindParam(':activity',$act);
             $stmt->execute();
-            if($typeOfPayment=="Down Payment")
+            if($remarks=="Down Payment")
             {
                 //send email
                 $stmt = $dbh->prepare("Select *,FORMAT(Amount,2)TotalAmount from tblreservation WHERE Code=:code");
@@ -318,16 +318,16 @@ try
                 foreach($data as $row)
                 {
                     $bal = $row['Amount']-$downpayment;
-                    $stmt = $dbh->prepare("insert into tblpayment(Code,Total,Paid,Balance,Remarks,Payment,Reference,date)
-                    values(:code,:total,:paid,:balance,:remarks,:payment,:reference,:date)");
+                    $stmt = $dbh->prepare("insert into tblpayment(Code,Total,Paid,Balance,Date,Payment,Reference,Remarks)
+                    values(:code,:total,:paid,:balance,:date,:payment,:reference,:remarks)");
                     $stmt->bindParam(':code',$val);
                     $stmt->bindParam(':total',$row['Amount']);
                     $stmt->bindParam(':paid',$downpayment);
                     $stmt->bindParam(':balance',$bal);
-                    $stmt->bindParam(':remarks',$typeOfPayment);
+                    $stmt->bindParam(':date',$date);
                     $stmt->bindParam(':payment',$paymentMethod);
                     $stmt->bindParam(':reference',$reference);
-                    $stmt->bindParam(':date',$date);
+                    $stmt->bindParam(':remarks',$remarks);
                     $stmt->execute();
                     
                     $mail->IsHTML(true);
@@ -374,16 +374,16 @@ try
                 foreach($data as $row)
                 {
                     $bal = $row['Amount']-$downpayment;
-                    $stmt = $dbh->prepare("insert into tblpayment(Code,Total,Paid,Balance,Remarks,Payment,Reference,date)
-                    values(:code,:total,:paid,:balance,:remarks,:payment,:reference,:date)");
+                    $stmt = $dbh->prepare("insert into tblpayment(Code,Total,Paid,Balance,Date,Payment,Reference,Remarks)
+                    values(:code,:total,:paid,:balance,:date,:payment,:reference,:remarks)");
                     $stmt->bindParam(':code',$val);
                     $stmt->bindParam(':total',$row['Amount']);
                     $stmt->bindParam(':paid',$downpayment);
                     $stmt->bindParam(':balance',$bal);
-                    $stmt->bindParam(':remarks',$typeOfPayment);
+                    $stmt->bindParam(':date',$date);
                     $stmt->bindParam(':payment',$paymentMethod);
                     $stmt->bindParam(':reference',$reference);
-                    $stmt->bindParam(':date',$date);
+                    $stmt->bindParam(':remarks',$remarks);
                     $stmt->execute();
 
                     $mail->IsHTML(true);

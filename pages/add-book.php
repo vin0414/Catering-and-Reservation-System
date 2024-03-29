@@ -157,8 +157,10 @@
                         $move =  move_uploaded_file($temp,"../resources/cake/".$filename);
                     }
                     //save the menu
-                    $stmt = $dbh->prepare("insert into tbl_selected_menu(Code,Appetizer,Beef,Pork,Chicken,Vegetables,Pasta,Dessert,Drinks,Seafood,KiddieMeal,KiddieDrinks)
-                    values(:code,:a,:b,:c,:d,:e,:f,:g,:h,:i,:j,:k)");
+					$soup = "";
+                    $stmt = $dbh->prepare("insert into tbl_selected_menu
+					(Code,Appetizer,Beef,Pork,Chicken,Vegetables,Pasta,Dessert,Drinks,Seafood,KiddieMeal,KiddieDrinks,Soup)
+                    values(:code,:a,:b,:c,:d,:e,:f,:g,:h,:i,:j,:k,:l)");
                     $stmt->bindParam(':code',$codes);
                     $stmt->bindParam(':a',$appetizer);
                     $stmt->bindParam(':b',$beef);
@@ -171,6 +173,7 @@
                     $stmt->bindParam(':i',$seafood);
                     $stmt->bindParam(':j',$kiddie_meal);
                     $stmt->bindParam(':k',$kiddie_drinks); 
+					$stmt->bindParam(':l',$soup); 
                     $stmt->execute();
                     //rents
                     
@@ -260,6 +263,7 @@
 					$stmt->bindParam(':datetime',$date);
 					$stmt->bindParam(':user',$_SESSION['sess_id']);
 					$stmt->bindParam(':activity',$act);
+					$stmt->execute();
                     $now = time();
                     $your_date = strtotime($date_event);
                     $datediff = $your_date-$now;

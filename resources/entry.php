@@ -379,6 +379,7 @@ switch($action)
         $event = $_POST['event'];
         $type = $_POST['package'];
         $rate = str_replace(',', '', $_POST['rate']);
+        $details = $_POST['details'];
         $status = 1;
         if(empty($event)||empty($type)||empty($rate))
         {
@@ -386,9 +387,11 @@ switch($action)
         }
         else
         {
-            $stmt = $dbh->prepare("insert into tblproduct(eventID,Package_Name,Price,Status)values(:event,:package,:rate,:stat)");
+            $stmt = $dbh->prepare("insert into tblproduct(eventID,Package_Name,Description,Price,Status)
+            values(:event,:package,:details,:rate,:stat)");
             $stmt->bindParam(':event',$event);
             $stmt->bindParam(':package',$type);
+            $stmt->bindParam(':details',$details);
             $stmt->bindParam(':rate',$rate);
             $stmt->bindParam(':stat',$status);
             $stmt->execute();
