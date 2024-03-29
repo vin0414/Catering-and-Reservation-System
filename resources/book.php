@@ -270,13 +270,13 @@ try
             {
                 $amount = $downpayment+$row['Paid'];
                 $bal = $row['Total']-$amount;
-                $stmt = $dbh->prepare("update tblpayment SET Paid=:paid,Balance=:bal,Remarks=:rem,date=:date,Reference=:ref,Payment=:pay WHERE Code=:code");
+                $stmt = $dbh->prepare("update tblpayment SET Paid=:paid,Balance=:balance,Date=:date,Payment=:pay,Reference=:ref,Remarks=:rem WHERE Code=:code");
                 $stmt->bindParam(':paid',$amount);
                 $stmt->bindParam(':balance',$bal);
-                $stmt->bindParam(':rem',$remarks);
                 $stmt->bindParam(':date',$date);
-                $stmt->bindParam(':ref',$reference);
                 $stmt->bindParam(':pay',$pay);
+                $stmt->bindParam(':ref',$reference);
+                $stmt->bindParam(':rem',$remarks);
                 $stmt->bindParam(':code',$val);
                 $stmt->execute();
             }
