@@ -170,7 +170,7 @@
                     $stmt->execute();
                     //rents
                     
-                    $rowCounts = count((array)$_POST["itemID"]);
+                    $rowCounts = count($_POST["itemID"]);
                     if($rowCounts>0)
                     {
                         for($i=0;$i<$rowCounts;$i++)
